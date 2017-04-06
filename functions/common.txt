@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+IFS=$'\n\t'
+RED=
+NC=
+
+case "$(git config --get color.ui)" in
+  "auto" | "always")
+      RED=$(git config --get-color color.interactive.error  1)
+      NC=$'\033[0m'
+      ;;
+  *)
+esac
+
+function print_error {
+    local l_file=$REPO_ROOT/$1
+    shift
+
+    if ! $ERROR_FOUND; then
+        echo -e "Found PHP parse errors:\n "
+    fi
+
+    echo $@ | sed -e "s|${l_file}|${RED}${l_file}${NC}|g"
+}
+
+function print_mesg {
+    if ! $SILENT_MODE
+    then
+        echo $@
+    fi
+}

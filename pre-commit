@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+
+my_dir="$(dirname "$0")"
+source $my_dir/functions/common.txt
+source $my_dir/functions/php.txt
+
+function main {
+    local has_errors=
+
+    for file in $(changed_php_files)
+    do
+        errors=$(php_lint $file; xdebug_grep $file)
+        if [[ "$errors" ]]
+        then
+            print_error $file $errors
+            has_errors=true
+        fi
+    done
+
+    if $has_errors
+    then
+        echo -e "\nFIX THIS FUCKING PHP PARSE ERRORS DUDE"
+        exit 1
+    fi
+}
+
+main

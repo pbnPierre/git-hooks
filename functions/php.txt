@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+function changed_php_files {
+    git diff --cached --name-only --diff-filter=ACMR | grep ".php$"
+}
+
+function php_lint {
+    git show :$1 | php --syntax-check 2>&1 | grep "Parse error" | sed -e "s|file in - on line|file in $REPO_ROOT/$1 on line|"
+}
+
+function xdebug_grep {
+    git show :$1 | grep -nH xdebug_ | sed -e "s|^(standard input)|PHP XDebug Statment: $REPO_ROOT/$1|"
+}
