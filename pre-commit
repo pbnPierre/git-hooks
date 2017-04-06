@@ -6,7 +6,7 @@ source $my_dir/functions/common.txt
 source $my_dir/functions/php.txt
 
 function main {
-    local has_errors=
+    local has_errors=false
 
     for file in $(changed_php_files)
     do
