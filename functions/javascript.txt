@@ -1,0 +1,17 @@
+function find_js_debug {
+    local ERROR
+    for file in $FILES
+    do
+        ERROR=$(git show :$file | grep -Ein "console\.(dir|error|group|groupCollapsed|groupEnd|info|log|time|timeEnd|trace|warn)" | cut -d : -f 1)
+        if [ "$ERROR" != "" ]; then
+            echo -e "\033[31mConsole statement found in\033[1m" $file "\033[0m\033[31mat line:" $(sed 's/ /, /g' <<< $ERROR) "\033[0m"
+            if ask "Debug trace found do you still want to commit"; then
+                exit 0
+            else
+                exit 1
+            fi
+        fi
+    done
+
+    exit 0
+}
